@@ -1,4 +1,4 @@
-export default class GetTextResponseDto {
+export default class TextModel {
   id: string;
   title: string;
   content: string;

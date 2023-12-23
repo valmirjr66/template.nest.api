@@ -1,10 +1,11 @@
 import { Module } from '@nestjs/common';
-import TextController from './controler/TextController';
+import TextController from './controller/TextController';
 import TextService from './service/TextService';
+import TextRepository from './repository/TextRepository';
 
 @Module({
   imports: [],
   controllers: [TextController],
-  providers: [TextService],
+  providers: [TextService, TextRepository],
 })
 export class AppModule {}
