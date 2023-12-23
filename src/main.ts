@@ -9,7 +9,7 @@ async function bootstrap() {
     .setTitle('Template NestJS API')
     .setDescription('This is an RESTful API template based on NestJS')
     .setVersion('1.0')
-    .addTag('texts')
+    .addTag('Text')
     .build();
 
   const document = SwaggerModule.createDocument(app, config);

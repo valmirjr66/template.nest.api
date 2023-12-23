@@ -5,7 +5,7 @@ import InsertTextRequestDto from 'src/dto/InsertTextRequestDto';
 import InsertTextResponseDto from 'src/dto/InsertTextResponseDto';
 import TextService from 'src/service/TextService';
 
-@ApiTags('texts')
+@ApiTags('Text')
 @Controller('texts')
 export default class TextController {
   constructor(private readonly textService: TextService) {}
