@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import BaseRepository from './BaseRepostory';
+import BaseRepository from './BaseRepository';
 import TextModel from 'src/model/TextModel';
 import InsertTextRequestDto from 'src/dto/InsertTextRequestDto';
 
