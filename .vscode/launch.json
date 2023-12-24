@@ -18,8 +18,7 @@
       "sourceMaps": true,
       "envFile": "${workspaceFolder}/.env",
       "cwd": "${workspaceRoot}",
-      "console": "internalConsole",
-      "protocol": "inspector"
+      "console": "internalConsole"
     }
   ]
 }
