@@ -1,9 +1,8 @@
-export default class InsertTextRequestDto {
-  title: string;
-  content: string;
+import { MaxLength } from 'class-validator';
 
-  constructor(title: string, content: string) {
-    this.title = title;
-    this.content = content;
-  }
+export default class InsertTextRequestDto {
+  @MaxLength(50)
+  title: string;
+
+  content: string;
 }
