@@ -1,10 +1,14 @@
-import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
+import { NestFactory } from '@nestjs/core';
+import { NestExpressApplication } from '@nestjs/platform-express';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { SwaggerTheme } from 'swagger-themes';
+import { AppModule } from './app.module';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+
+  app.setGlobalPrefix('api').useGlobalPipes(new ValidationPipe());
 
   const config = new DocumentBuilder()
     .setTitle('Template NestJS API')
@@ -15,9 +19,11 @@ async function bootstrap() {
 
   const document = SwaggerModule.createDocument(app, config);
 
-  SwaggerModule.setup('ui', app, document);
+  const swaggerDarkTheme = new SwaggerTheme('v3').getBuffer('dark');
 
-  app.useGlobalPipes(new ValidationPipe());
+  SwaggerModule.setup('ui', app, document, {
+    customCss: swaggerDarkTheme,
+  });
 
   await app.listen(3000);
 }
