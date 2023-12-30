@@ -3,11 +3,12 @@ import fs from 'fs-extra';
 
 @Injectable()
 export default class BlobManager {
-  private basePath: string = process.env.BASE_BLOB_PATH;
+  private readonly basePath: string = process.env.BASE_BLOB_PATH;
 
   async write(path: string, file: Buffer): Promise<void> {
     try {
-      await fs.ensureDir(this.basePath);
+      const dir = path.split('/').slice(0, -1).join('/');
+      await fs.ensureDir(`${this.basePath}/${dir}`);
       await fs.writeFile(`${this.basePath}/${path}`, file);
     } catch (err) {
       throw 'Error while writing file';

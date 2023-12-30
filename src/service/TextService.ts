@@ -1,9 +1,14 @@
-import { Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import BlobManager from 'src/blob/BlobManager';
 import GetTextResponseDto from 'src/dto/GetTextResponseDto';
 import InsertTextRequestDto from 'src/dto/InsertTextRequestDto';
 import InsertTextResponseDto from 'src/dto/InsertTextResponseDto';
 import TextRepository from 'src/repository/TextRepository';
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export default class TextService {
@@ -24,11 +29,27 @@ export default class TextService {
     return await this.textRepository.insertText(text);
   }
 
-  async insertCoverImage(coverImage: Express.Multer.File): Promise<void> {
+  async insertCoverImage(
+    id: string,
+    coverImage: Express.Multer.File,
+  ): Promise<string> {
+    if (!(await this.textRepository.getTextById(id))) {
+      throw new BadRequestException("Id doesn't match any text");
+    }
+
     try {
-      await this.blobManager.write(coverImage.originalname, coverImage.buffer);
+      const fileExtension = coverImage.originalname.split('.').pop();
+      const randomGuid = uuidv4();
+
+      await this.blobManager.write(
+        `${id}/${randomGuid}.${fileExtension}`,
+        coverImage.buffer,
+      );
+
+      return randomGuid;
     } catch (err) {
       console.error(err);
+      throw new InternalServerErrorException();
     }
   }
 }

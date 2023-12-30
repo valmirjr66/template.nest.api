@@ -12,8 +12,11 @@ import {
   ApiBadRequestResponse,
   ApiBody,
   ApiConsumes,
+  ApiCreatedResponse,
+  ApiInternalServerErrorResponse,
   ApiNoContentResponse,
   ApiNotFoundResponse,
+  ApiOkResponse,
   ApiTags,
 } from '@nestjs/swagger';
 import ResponseDescriptions from 'src/constants/ResponseDescriptions';
@@ -32,7 +35,11 @@ export default class TextController extends BaseController {
   }
 
   @Get(':id')
+  @ApiOkResponse({ description: ResponseDescriptions.OK })
   @ApiNotFoundResponse({ description: ResponseDescriptions.NOT_FOUND })
+  @ApiInternalServerErrorResponse({
+    description: ResponseDescriptions.INTERNAL_SERVER_ERROR,
+  })
   async getTextById(@Param('id') id: string): Promise<GetTextResponseDto> {
     const response = await this.textService.getTextById(id);
     this.validateGetResponse(response);
@@ -40,7 +47,11 @@ export default class TextController extends BaseController {
   }
 
   @Get()
+  @ApiOkResponse({ description: ResponseDescriptions.OK })
   @ApiNoContentResponse({ description: ResponseDescriptions.NO_CONTENT })
+  @ApiInternalServerErrorResponse({
+    description: ResponseDescriptions.INTERNAL_SERVER_ERROR,
+  })
   async getAllTexts(): Promise<GetTextResponseDto[]> {
     const response = await this.textService.getAllTexts();
     this.validateGetResponse(response);
@@ -48,21 +59,32 @@ export default class TextController extends BaseController {
   }
 
   @Post()
+  @ApiCreatedResponse({ description: ResponseDescriptions.CREATED })
   @ApiBadRequestResponse({ description: ResponseDescriptions.BAD_REQUEST })
+  @ApiInternalServerErrorResponse({
+    description: ResponseDescriptions.INTERNAL_SERVER_ERROR,
+  })
   async insertText(
     @Body() text: InsertTextRequestDto,
   ): Promise<InsertTextResponseDto> {
     return await this.textService.insertText(text);
   }
 
-  @Post('cover-image')
+  @Post(':id/cover-image')
   @ApiConsumes('multipart/form-data')
   @UseInterceptors(FileInterceptor('coverImage'))
+  @ApiCreatedResponse({ description: ResponseDescriptions.CREATED })
   @ApiBadRequestResponse({ description: ResponseDescriptions.BAD_REQUEST })
+  @ApiInternalServerErrorResponse({
+    description: ResponseDescriptions.INTERNAL_SERVER_ERROR,
+  })
   @ApiBody({
     type: InsertCoverImageRequestDto,
   })
-  async insertCoverImage(@UploadedFile() coverImage: Express.Multer.File) {
-    return await this.textService.insertCoverImage(coverImage);
+  async insertCoverImage(
+    @UploadedFile() coverImage: Express.Multer.File,
+    @Param('id') id: string,
+  ): Promise<string> {
+    return await this.textService.insertCoverImage(id, coverImage);
   }
 }
