@@ -9,15 +9,15 @@ export default class TextRepository extends BaseRepository {
     super();
   }
 
-  async getById(id: string): Promise<TextModel> {
+  async getTextById(id: string): Promise<TextModel> {
     return await this.prisma.text.findUnique({ where: { id: id } });
   }
 
-  async getAll(): Promise<TextModel[]> {
+  async getAllTexts(): Promise<TextModel[]> {
     return await this.prisma.text.findMany();
   }
 
-  async insert(text: InsertTextRequestDto): Promise<TextModel> {
+  async insertText(text: InsertTextRequestDto): Promise<TextModel> {
     return await this.prisma.text.create({ data: text });
   }
 }
