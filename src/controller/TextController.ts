@@ -19,12 +19,12 @@ import {
   ApiOkResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import ResponseDescriptions from 'src/constants/ResponseDescriptions';
-import GetTextResponseDto from 'src/dto/GetTextResponseDto';
-import InsertCoverImageRequestDto from 'src/dto/InsertCoverImageRequestDto';
-import InsertTextRequestDto from 'src/dto/InsertTextRequestDto';
-import InsertTextResponseDto from 'src/dto/InsertTextResponseDto';
-import TextService from 'src/service/TextService';
+import ResponseDescriptions from 'constants/ResponseDescriptions';
+import GetTextResponseDto from 'dto/GetTextResponseDto';
+import InsertCoverImageRequestDto from 'dto/InsertCoverImageRequestDto';
+import InsertTextRequestDto from 'dto/InsertTextRequestDto';
+import InsertTextResponseDto from 'dto/InsertTextResponseDto';
+import TextService from 'service/TextService';
 import BaseController from './BaseController';
 
 @ApiTags('Text')

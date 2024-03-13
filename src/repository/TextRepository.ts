@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import BaseRepository from './BaseRepository';
-import TextModel from 'src/model/TextModel';
-import InsertTextRequestDto from 'src/dto/InsertTextRequestDto';
+import TextModel from 'model/TextModel';
+import InsertTextRequestDto from 'dto/InsertTextRequestDto';
 
 @Injectable()
 export default class TextRepository extends BaseRepository {

@@ -3,11 +3,11 @@ import {
   Injectable,
   InternalServerErrorException,
 } from '@nestjs/common';
-import BlobManager from 'src/blob/BlobManager';
-import GetTextResponseDto from 'src/dto/GetTextResponseDto';
-import InsertTextRequestDto from 'src/dto/InsertTextRequestDto';
-import InsertTextResponseDto from 'src/dto/InsertTextResponseDto';
-import TextRepository from 'src/repository/TextRepository';
+import BlobManager from 'blob/BlobManager';
+import GetTextResponseDto from 'dto/GetTextResponseDto';
+import InsertTextRequestDto from 'dto/InsertTextRequestDto';
+import InsertTextResponseDto from 'dto/InsertTextResponseDto';
+import TextRepository from 'repository/TextRepository';
 import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
