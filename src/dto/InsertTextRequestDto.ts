@@ -1,4 +1,4 @@
-import { MaxLength } from 'class-validator';
+import { Length } from '@nestjs/class-validator';
 
 export default class InsertTextRequestDto {
   constructor(title: string, content: string) {
@@ -6,8 +6,9 @@ export default class InsertTextRequestDto {
     this.content = content;
   }
 
-  @MaxLength(50)
+  @Length(3, 50)
   title: string;
 
+  @Length(30, 1500)
   content: string;
 }
