@@ -1,10 +1,9 @@
-import { ApiProperty } from '@nestjs/swagger';
-
 export default class InsertCoverImageRequestDto {
-  constructor(coverImage: Express.Multer.File) {
+  constructor(id: string, coverImage: Express.Multer.File) {
+    this.id = id;
     this.coverImage = coverImage;
   }
 
-  @ApiProperty({ type: 'string', format: 'binary' })
+  id: string;
   coverImage: Express.Multer.File;
 }

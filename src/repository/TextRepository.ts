@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
+import GetTextResponseModel from 'model/GetTextResponseModel';
+import InsertTextRequestModel from 'model/InsertTextRequestModel';
 import BaseRepository from './BaseRepository';
-import TextModel from 'model/TextModel';
-import InsertTextRequestDto from 'dto/InsertTextRequestDto';
 
 @Injectable()
 export default class TextRepository extends BaseRepository {
@@ -9,15 +9,17 @@ export default class TextRepository extends BaseRepository {
     super();
   }
 
-  async getTextById(id: string): Promise<TextModel> {
+  async getTextById(id: string): Promise<GetTextResponseModel> {
     return await this.prisma.text.findUnique({ where: { id: id } });
   }
 
-  async getAllTexts(): Promise<TextModel[]> {
+  async getAllTexts(): Promise<GetTextResponseModel[]> {
     return await this.prisma.text.findMany();
   }
 
-  async insertText(text: InsertTextRequestDto): Promise<TextModel> {
+  async insertText(
+    text: InsertTextRequestModel,
+  ): Promise<GetTextResponseModel> {
     return await this.prisma.text.create({ data: text });
   }
 }

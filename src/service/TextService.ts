@@ -5,6 +5,7 @@ import {
 } from '@nestjs/common';
 import BlobManager from 'blob/BlobManager';
 import GetTextResponseDto from 'dto/GetTextResponseDto';
+import InsertCoverImageRequestDto from 'dto/InsertCoverImageRequestDto';
 import InsertTextRequestDto from 'dto/InsertTextRequestDto';
 import InsertTextResponseDto from 'dto/InsertTextResponseDto';
 import TextRepository from 'repository/TextRepository';
@@ -29,21 +30,18 @@ export default class TextService {
     return await this.textRepository.insertText(text);
   }
 
-  async insertCoverImage(
-    id: string,
-    coverImage: Express.Multer.File,
-  ): Promise<string> {
-    if (!(await this.textRepository.getTextById(id))) {
+  async insertCoverImage(dto: InsertCoverImageRequestDto): Promise<string> {
+    if (!(await this.textRepository.getTextById(dto.id))) {
       throw new BadRequestException("Id doesn't match any text");
     }
 
     try {
-      const fileExtension = coverImage.originalname.split('.').pop();
+      const fileExtension = dto.coverImage.originalname.split('.').pop();
       const randomGuid = uuidv4();
 
       await this.blobManager.write(
-        `${id}/${randomGuid}.${fileExtension}`,
-        coverImage.buffer,
+        `${dto.id}/${randomGuid}.${fileExtension}`,
+        dto.coverImage.buffer,
       );
 
       return randomGuid;

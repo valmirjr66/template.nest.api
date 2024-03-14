@@ -20,6 +20,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import ResponseDescriptions from 'constants/ResponseDescriptions';
+import CoverImageDto from 'dto/CoverImageDto';
 import GetTextResponseDto from 'dto/GetTextResponseDto';
 import InsertCoverImageRequestDto from 'dto/InsertCoverImageRequestDto';
 import InsertTextRequestDto from 'dto/InsertTextRequestDto';
@@ -79,12 +80,13 @@ export default class TextController extends BaseController {
     description: ResponseDescriptions.INTERNAL_SERVER_ERROR,
   })
   @ApiBody({
-    type: InsertCoverImageRequestDto,
+    type: CoverImageDto,
   })
   async insertCoverImage(
     @UploadedFile() coverImage: Express.Multer.File,
     @Param('id') id: string,
   ): Promise<string> {
-    return await this.textService.insertCoverImage(id, coverImage);
+    const dto = new InsertCoverImageRequestDto(id, coverImage);
+    return await this.textService.insertCoverImage(dto);
   }
 }

@@ -1,4 +1,4 @@
-export default class TextModel {
+export default class GetTextResponseModel {
   constructor(id: string, title: string, content: string) {
     this.id = id;
     this.title = title;
