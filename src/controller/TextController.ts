@@ -42,7 +42,7 @@ export default class TextController extends BaseController {
     description: ResponseDescriptions.INTERNAL_SERVER_ERROR,
   })
   async getTextById(@Param('id') id: string): Promise<GetTextResponseDto> {
-    const response = await this.textService.getTextById(id);
+    const response = this.textService.getTextById(id);
     this.validateGetResponse(response);
     return response;
   }
@@ -54,7 +54,7 @@ export default class TextController extends BaseController {
     description: ResponseDescriptions.INTERNAL_SERVER_ERROR,
   })
   async getAllTexts(): Promise<GetTextResponseDto[]> {
-    const response = await this.textService.getAllTexts();
+    const response = this.textService.getAllTexts();
     this.validateGetResponse(response);
     return response;
   }
@@ -68,7 +68,7 @@ export default class TextController extends BaseController {
   async insertText(
     @Body() text: InsertTextRequestDto,
   ): Promise<InsertTextResponseDto> {
-    return await this.textService.insertText(text);
+    return this.textService.insertText(text);
   }
 
   @Post(':id/cover-image')
@@ -87,6 +87,6 @@ export default class TextController extends BaseController {
     @Param('id') id: string,
   ): Promise<string> {
     const dto = new InsertCoverImageRequestDto(id, coverImage);
-    return await this.textService.insertCoverImage(dto);
+    return this.textService.insertCoverImage(dto);
   }
 }

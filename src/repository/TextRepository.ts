@@ -1,9 +1,9 @@
+import { Injectable } from '@nestjs/common';
 import { TextEntity } from 'entity/TextEntity';
 import GetTextResponseModel from 'model/GetTextResponseModel';
 import InsertTextRequestModel from 'model/InsertTextRequestModel';
 import InsertTextResponseModel from 'model/InsertTextResponseModel';
 import mainDataSource from './MainDataSource';
-import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export default class TextRepository {
@@ -24,6 +24,6 @@ export default class TextRepository {
   async insertText(
     text: InsertTextRequestModel,
   ): Promise<InsertTextResponseModel> {
-    return this.repository.create(text);
+    return this.repository.save(text);
   }
 }

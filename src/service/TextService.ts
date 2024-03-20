@@ -19,15 +19,15 @@ export default class TextService {
   ) {}
 
   async getTextById(id: string): Promise<GetTextResponseDto> {
-    return await this.textRepository.getTextById(id);
+    return this.textRepository.getTextById(id);
   }
 
   async getAllTexts(): Promise<GetTextResponseDto[]> {
-    return await this.textRepository.getAllTexts();
+    return this.textRepository.getAllTexts();
   }
 
   async insertText(text: InsertTextRequestDto): Promise<InsertTextResponseDto> {
-    return await this.textRepository.insertText(text);
+    return this.textRepository.insertText(text);
   }
 
   async insertCoverImage(dto: InsertCoverImageRequestDto): Promise<string> {
