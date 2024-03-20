@@ -13,17 +13,15 @@ export default class TextRepository {
     return this.repository.countBy({ id });
   }
 
-  async getTextById(id: string): Promise<GetTextResponseModel> {
+  async getById(id: string): Promise<GetTextResponseModel> {
     return this.repository.findOneBy({ id });
   }
 
-  async getAllTexts(): Promise<GetTextResponseModel[]> {
+  async getAll(): Promise<GetTextResponseModel[]> {
     return this.repository.find();
   }
 
-  async insertText(
-    text: InsertTextRequestModel,
-  ): Promise<InsertTextResponseModel> {
+  async insert(text: InsertTextRequestModel): Promise<InsertTextResponseModel> {
     return this.repository.save(text);
   }
 }
