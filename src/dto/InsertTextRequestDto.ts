@@ -1,4 +1,4 @@
-import { Length } from '@nestjs/class-validator';
+import { Length } from 'class-validator';
 
 export default class InsertTextRequestDto {
   constructor(title: string, content: string) {

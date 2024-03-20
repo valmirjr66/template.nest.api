@@ -1,4 +1,4 @@
-import { validate } from '@nestjs/class-validator';
+import { validate } from 'class-validator';
 import InsertTextRequestDto from './InsertTextRequestDto';
 
 describe('Insert Text Request DTO', () => {

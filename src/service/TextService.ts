@@ -31,7 +31,9 @@ export default class TextService {
   }
 
   async insertCoverImage(dto: InsertCoverImageRequestDto): Promise<string> {
-    if (!(await this.textRepository.getTextById(dto.id))) {
+    const textExists = (await this.textRepository.countById(dto.id)) !== 0;
+
+    if (!textExists) {
       throw new BadRequestException("Id doesn't match any text");
     }
 

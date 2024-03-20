@@ -1,26 +1,29 @@
-import { Injectable } from '@nestjs/common';
+import { TextEntity } from 'entity/TextEntity';
 import GetTextResponseModel from 'model/GetTextResponseModel';
 import InsertTextRequestModel from 'model/InsertTextRequestModel';
-import BaseRepository from './BaseRepository';
 import InsertTextResponseModel from 'model/InsertTextResponseModel';
+import mainDataSource from './MainDataSource';
+import { Injectable } from '@nestjs/common';
 
 @Injectable()
-export default class TextRepository extends BaseRepository {
-  constructor() {
-    super();
+export default class TextRepository {
+  private readonly repository = mainDataSource.getRepository(TextEntity);
+
+  async countById(id: string): Promise<number> {
+    return this.repository.countBy({ id });
   }
 
   async getTextById(id: string): Promise<GetTextResponseModel> {
-    return await this.prisma.text.findUnique({ where: { id: id } });
+    return this.repository.findOneBy({ id });
   }
 
   async getAllTexts(): Promise<GetTextResponseModel[]> {
-    return await this.prisma.text.findMany();
+    return this.repository.find();
   }
 
   async insertText(
     text: InsertTextRequestModel,
   ): Promise<InsertTextResponseModel> {
-    return await this.prisma.text.create({ data: text });
+    return this.repository.create(text);
   }
 }

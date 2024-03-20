@@ -36,5 +36,5 @@ lerna-debug.log*
 
 # Custom
 .env
-**/*.db
+.sqlite
 storage/**
