@@ -20,13 +20,13 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import ResponseDescriptions from 'constants/ResponseDescriptions';
-import CoverImageDto from 'dto/CoverImageDto';
 import GetTextResponseDto from 'dto/GetTextResponseDto';
-import InsertCoverImageRequestDto from 'dto/InsertCoverImageRequestDto';
 import InsertTextRequestDto from 'dto/InsertTextRequestDto';
 import InsertTextResponseDto from 'dto/InsertTextResponseDto';
+import MediaAttachmentDto from 'dto/MediaAttachmentDto';
 import TextService from 'service/TextService';
 import BaseController from './BaseController';
+import AttachMediaRequestDto from 'dto/AttachMediaRequestDto';
 
 @ApiTags('Text')
 @Controller('texts')
@@ -71,22 +71,22 @@ export default class TextController extends BaseController {
     return this.textService.insertText(text);
   }
 
-  @Post(':id/cover-image')
+  @Post(':id/media')
   @ApiConsumes('multipart/form-data')
-  @UseInterceptors(FileInterceptor('coverImage'))
+  @UseInterceptors(FileInterceptor('media'))
   @ApiCreatedResponse({ description: ResponseDescriptions.CREATED })
   @ApiBadRequestResponse({ description: ResponseDescriptions.BAD_REQUEST })
   @ApiInternalServerErrorResponse({
     description: ResponseDescriptions.INTERNAL_SERVER_ERROR,
   })
   @ApiBody({
-    type: CoverImageDto,
+    type: MediaAttachmentDto,
   })
-  async insertCoverImage(
-    @UploadedFile() coverImage: Express.Multer.File,
+  async attachMedia(
+    @UploadedFile() media: Express.Multer.File,
     @Param('id') id: string,
   ): Promise<string> {
-    const dto = new InsertCoverImageRequestDto(id, coverImage);
-    return this.textService.insertCoverImage(dto);
+    const dto = new AttachMediaRequestDto(id, media);
+    return this.textService.attachMedia(dto);
   }
 }

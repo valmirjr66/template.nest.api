@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import BlobManager from 'blob/BlobManager';
 import GetTextResponseDto from 'dto/GetTextResponseDto';
-import InsertCoverImageRequestDto from 'dto/InsertCoverImageRequestDto';
+import AttachMediaRequestDto from 'dto/AttachMediaRequestDto';
 import InsertTextRequestDto from 'dto/InsertTextRequestDto';
 import InsertTextResponseDto from 'dto/InsertTextResponseDto';
 import TextRepository from 'repository/TextRepository';
@@ -30,7 +30,7 @@ export default class TextService {
     return this.textRepository.insertText(text);
   }
 
-  async insertCoverImage(dto: InsertCoverImageRequestDto): Promise<string> {
+  async attachMedia(dto: AttachMediaRequestDto): Promise<string> {
     const textExists = (await this.textRepository.countById(dto.id)) !== 0;
 
     if (!textExists) {
@@ -38,12 +38,12 @@ export default class TextService {
     }
 
     try {
-      const fileExtension = dto.coverImage.originalname.split('.').pop();
+      const fileExtension = dto.media.originalname.split('.').pop();
       const randomGuid = uuidv4();
 
       await this.blobManager.write(
         `${dto.id}/${randomGuid}.${fileExtension}`,
-        dto.coverImage.buffer,
+        dto.media.buffer,
       );
 
       return randomGuid;
