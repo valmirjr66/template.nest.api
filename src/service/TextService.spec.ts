@@ -1,6 +1,7 @@
 import BlobManager from 'blob/BlobManager';
 import TextRepository from 'repository/TextRepository';
 import TextService from './TextService';
+import AttachmentRepository from 'repository/AttachmentRepository';
 
 describe('Text Service', () => {
   let textService: TextService;
@@ -13,21 +14,28 @@ describe('Text Service', () => {
 
   beforeEach(() => {
     const textRepository = new TextRepository();
+    const attachmentRepository = new AttachmentRepository();
     const blobManager = new BlobManager();
 
     jest
-      .spyOn(textRepository, 'getAllTexts')
+      .spyOn(textRepository, 'getAll')
       .mockImplementation(async () => [SAMPLE_TEXT_MODEL]);
 
     jest
-      .spyOn(textRepository, 'getTextById')
+      .spyOn(textRepository, 'getById')
       .mockImplementation(async () => SAMPLE_TEXT_MODEL);
 
     jest
-      .spyOn(textRepository, 'insertText')
+      .spyOn(textRepository, 'insert')
       .mockImplementation(async () => SAMPLE_TEXT_MODEL);
 
-    textService = new TextService(textRepository, blobManager);
+    jest.spyOn(attachmentRepository, 'insert').mockImplementation();
+
+    textService = new TextService(
+      textRepository,
+      attachmentRepository,
+      blobManager,
+    );
   });
 
   it('Should return the sample text', async () => {
