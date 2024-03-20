@@ -4,10 +4,11 @@ import {
   InternalServerErrorException,
 } from '@nestjs/common';
 import BlobManager from 'blob/BlobManager';
-import GetTextResponseDto from 'dto/GetTextResponseDto';
 import AttachMediaRequestDto from 'dto/AttachMediaRequestDto';
+import GetTextResponseDto from 'dto/GetTextResponseDto';
 import InsertTextRequestDto from 'dto/InsertTextRequestDto';
 import InsertTextResponseDto from 'dto/InsertTextResponseDto';
+import InsertTextRequestModel from 'model/InsertTextRequestModel';
 import TextRepository from 'repository/TextRepository';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -26,8 +27,14 @@ export default class TextService {
     return this.textRepository.getAllTexts();
   }
 
-  async insertText(text: InsertTextRequestDto): Promise<InsertTextResponseDto> {
-    return this.textRepository.insertText(text);
+  async insertText(dto: InsertTextRequestDto): Promise<InsertTextResponseDto> {
+    const model = new InsertTextRequestModel(
+      dto.title,
+      dto.content,
+      new Date(),
+    );
+
+    return this.textRepository.insertText(model);
   }
 
   async attachMedia(dto: AttachMediaRequestDto): Promise<string> {

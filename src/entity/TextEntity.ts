@@ -1,7 +1,7 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import 'reflect-metadata';
 
-@Entity({ name: 'Text' })
+@Entity({ name: 'Texts' })
 export class TextEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -11,4 +11,7 @@ export class TextEntity {
 
   @Column()
   content: string;
+
+  @Column()
+  publicationDate: Date;
 }
