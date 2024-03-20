@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus } from '@nestjs/common';
 
-export default class BaseController {
+export default abstract class BaseController {
   protected validateGetResponse<T>(response: T | Array<T>): void {
     if (response instanceof Array && response.length === 0) {
       throw new HttpException('No content', HttpStatus.NO_CONTENT);
