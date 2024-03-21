@@ -5,6 +5,15 @@
   "author": "Valmir Jr.",
   "private": true,
   "license": "UNLICENSED",
+  "config": {
+    "ghooks": {
+      "pre-commit": "yarn test"
+    }
+  },
+  "engines": {
+    "npm": "please-use-yarn",
+    "yarn": ">= 1.22.19"
+  },
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\"",
@@ -30,7 +39,7 @@
     "fs-extra": "^11.2.0",
     "reflect-metadata": "^0.2.1",
     "rxjs": "^7.8.1",
-    "swagger-themes": "^1.2.30",
+    "swagger-themes": "^1.4.3",
     "typeorm": "^0.3.20",
     "uuid": "^9.0.1"
   },
@@ -59,10 +68,5 @@
     "ts-node": "^10.9.1",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.1.3"
-  },
-  "config": {
-    "ghooks": {
-      "pre-commit": "yarn test"
-    }
   }
 }
