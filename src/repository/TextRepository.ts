@@ -1,27 +1,4 @@
-import { Injectable } from '@nestjs/common';
 import { TextEntity } from 'entity/TextEntity';
-import GetTextResponseModel from 'model/GetTextResponseModel';
-import InsertTextRequestModel from 'model/InsertTextRequestModel';
-import InsertTextResponseModel from 'model/InsertTextResponseModel';
-import mainDataSource from './MainDataSource';
+import BaseRepository from './BaseRepository';
 
-@Injectable()
-export default class TextRepository {
-  private readonly repository = mainDataSource.getRepository(TextEntity);
-
-  async countById(id: string): Promise<number> {
-    return this.repository.countBy({ id });
-  }
-
-  async getById(id: string): Promise<GetTextResponseModel> {
-    return this.repository.findOneBy({ id });
-  }
-
-  async getAll(): Promise<GetTextResponseModel[]> {
-    return this.repository.find();
-  }
-
-  async insert(text: InsertTextRequestModel): Promise<InsertTextResponseModel> {
-    return this.repository.save(text);
-  }
-}
+export default class TextRepository extends BaseRepository<TextEntity> {}

@@ -1,9 +1,10 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import 'reflect-metadata';
 import { AttachmentEntity } from './AttachmentEntity';
+import IEntity from './IEntity';
 
 @Entity({ name: 'Texts' })
-export class TextEntity {
+export class TextEntity implements IEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 

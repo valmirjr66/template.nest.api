@@ -71,7 +71,7 @@ export default class TextController extends BaseController {
     return this.textService.insertText(text);
   }
 
-  @Post(':id/media')
+  @Post(':textId/media')
   @ApiConsumes('multipart/form-data')
   @UseInterceptors(FileInterceptor('media'))
   @ApiCreatedResponse({ description: ResponseDescriptions.CREATED })
@@ -84,9 +84,9 @@ export default class TextController extends BaseController {
   })
   async attachMedia(
     @UploadedFile() media: Express.Multer.File,
-    @Param('id') id: string,
+    @Param('textId') textId: string,
   ): Promise<string> {
-    const dto = new AttachMediaRequestDto(id, media);
+    const dto = new AttachMediaRequestDto(textId, media);
     return this.textService.attachMedia(dto);
   }
 }

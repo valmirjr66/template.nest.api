@@ -1,58 +1,59 @@
 import BlobManager from 'blob/BlobManager';
-import TextRepository from 'repository/TextRepository';
+import DataManagerFactory from 'repository/DataManagerFactory';
+import { v4 as uuidv4 } from 'uuid';
+import TextRepository from '../repository/TextRepository';
 import TextService from './TextService';
-import AttachmentRepository from 'repository/AttachmentRepository';
+
+jest.mock('../repository/TextRepository');
+jest.mock('../repository/AttachmentRepository');
+
+const mockedTextRepo = jest.mocked(TextRepository);
 
 describe('Text Service', () => {
-  let textService: TextService;
+  const textService = new TextService(
+    new BlobManager(),
+    new DataManagerFactory(),
+  );
 
-  const SAMPLE_TEXT_MODEL = {
-    id: '1',
+  const SAMPLE_TEXT_DTO = {
     title: 'Sample title',
     content: 'Sample content',
   };
 
-  beforeEach(() => {
-    const textRepository = new TextRepository();
-    const attachmentRepository = new AttachmentRepository();
-    const blobManager = new BlobManager();
+  const SAMPLE_TEXT_MODEL = {
+    ...SAMPLE_TEXT_DTO,
+    id: uuidv4(),
+    publicationDate: new Date(),
+    attachments: [],
+  };
 
-    jest
-      .spyOn(textRepository, 'getAll')
-      .mockImplementation(async () => [SAMPLE_TEXT_MODEL]);
-
-    jest
-      .spyOn(textRepository, 'getById')
-      .mockImplementation(async () => SAMPLE_TEXT_MODEL);
-
-    jest
-      .spyOn(textRepository, 'insert')
-      .mockImplementation(async () => SAMPLE_TEXT_MODEL);
-
-    jest.spyOn(attachmentRepository, 'insert').mockImplementation();
-
-    textService = new TextService(
-      textRepository,
-      attachmentRepository,
-      blobManager,
-    );
+  beforeAll(() => {
+    mockedTextRepo.prototype.findById.mockResolvedValue(SAMPLE_TEXT_MODEL);
+    mockedTextRepo.prototype.findAll.mockResolvedValue([SAMPLE_TEXT_MODEL]);
+    mockedTextRepo.prototype.save.mockResolvedValue(SAMPLE_TEXT_MODEL);
   });
 
   it('Should return the sample text', async () => {
-    textService
-      .getTextById('1')
-      .then((data) => expect(data).toStrictEqual(SAMPLE_TEXT_MODEL));
+    const { id } = SAMPLE_TEXT_MODEL;
+    const result = await textService.getTextById(id);
+    expect(mockedTextRepo.prototype.findById).toHaveBeenCalledWith(id);
+    expect(result).toStrictEqual(SAMPLE_TEXT_MODEL);
   });
 
   it('Should return a list of texts', async () => {
-    textService
-      .getAllTexts()
-      .then((data) => expect(data).toStrictEqual([SAMPLE_TEXT_MODEL]));
+    const result = await textService.getAllTexts();
+    expect(mockedTextRepo.prototype.findAll).toHaveBeenCalled();
+    expect(result).toStrictEqual([SAMPLE_TEXT_MODEL]);
   });
 
   it('Should successfuly insert a new text', async () => {
-    textService
-      .insertText(SAMPLE_TEXT_MODEL)
-      .then((data) => expect(data).toStrictEqual(SAMPLE_TEXT_MODEL));
+    const result = await textService.insertText(SAMPLE_TEXT_DTO);
+
+    expect(mockedTextRepo.prototype.save).toHaveBeenCalledWith({
+      ...SAMPLE_TEXT_DTO,
+      publicationDate: expect.any(Date),
+    });
+
+    expect(result).toStrictEqual(SAMPLE_TEXT_MODEL);
   });
 });

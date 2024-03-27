@@ -1,13 +1,4 @@
-import { Injectable } from '@nestjs/common';
 import { AttachmentEntity } from 'entity/AttachmentEntity';
-import InsertAttachmentRequestModel from 'model/InsertAttachmentRequestModel';
-import mainDataSource from './MainDataSource';
+import BaseRepository from './BaseRepository';
 
-@Injectable()
-export default class AttachmentRepository {
-  private readonly repository = mainDataSource.getRepository(AttachmentEntity);
-
-  async insert(attachment: InsertAttachmentRequestModel): Promise<void> {
-    await this.repository.save(attachment);
-  }
-}
+export default class AttachmentRepository extends BaseRepository<AttachmentEntity> {}

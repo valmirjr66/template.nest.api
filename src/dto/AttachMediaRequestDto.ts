@@ -1,9 +1,9 @@
 export default class AttachMediaRequestDto {
-  constructor(id: string, media: Express.Multer.File) {
-    this.id = id;
+  constructor(textId: string, media: Express.Multer.File) {
+    this.textId = textId;
     this.media = media;
   }
 
-  id: string;
+  textId: string;
   media: Express.Multer.File;
 }

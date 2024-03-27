@@ -18,7 +18,8 @@
       "sourceMaps": true,
       "envFile": "${workspaceFolder}/.env",
       "cwd": "${workspaceRoot}",
-      "console": "internalConsole"
+      "console": "internalConsole",
+      "runtimeExecutable": "${env:HOME}/.nvm/versions/node/v18.19.0/bin/node"
     }
   ]
 }
