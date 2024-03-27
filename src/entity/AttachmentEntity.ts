@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import { Column, Entity, ManyToOne, PrimaryColumn } from 'typeorm';
-import { TextEntity } from './TextEntity';
 import IEntity from './IEntity';
+import { TextEntity } from './TextEntity';
 
 @Entity({ name: 'Attachments' })
 export class AttachmentEntity implements IEntity {

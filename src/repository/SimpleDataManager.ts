@@ -2,8 +2,8 @@ import { AttachmentEntity } from 'entity/AttachmentEntity';
 import { TextEntity } from 'entity/TextEntity';
 import AttachmentRepository from './AttachmentRepository';
 import DataManager from './DataManager';
-import TextRepository from './TextRepository';
 import mainDataSource from './MainDataSource';
+import TextRepository from './TextRepository';
 
 export default class SimpleDataManager extends DataManager {
   constructor() {
