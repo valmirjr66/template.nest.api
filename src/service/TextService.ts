@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 import BlobManager from 'blob/BlobManager';
 import AttachMediaRequestDto from 'dto/AttachMediaRequestDto';
+import AttachMediaResponseDto from 'dto/AttachMediaResponseDto';
 import GetTextResponseDto from 'dto/GetTextResponseDto';
 import InsertTextRequestDto from 'dto/InsertTextRequestDto';
 import InsertTextResponseDto from 'dto/InsertTextResponseDto';
@@ -39,7 +40,9 @@ export default class TextService {
     return this.dataManagerFactory.getSimple().textRepository.save(model);
   }
 
-  async attachMedia(dto: AttachMediaRequestDto): Promise<string> {
+  async attachMedia(
+    dto: AttachMediaRequestDto,
+  ): Promise<AttachMediaResponseDto> {
     const textExists =
       (await this.dataManagerFactory
         .getSimple()
@@ -64,7 +67,8 @@ export default class TextService {
         dto.textId,
       );
 
-      await transactionalDataManager.attachmentRepository.save(attachment);
+      const response =
+        await transactionalDataManager.attachmentRepository.save(attachment);
 
       await this.blobManager.write(
         `${dto.textId}/${randomGuid}.${fileExtension}`,
@@ -73,7 +77,7 @@ export default class TextService {
 
       await transactionalDataManager.commitTransaction();
 
-      return randomGuid;
+      return response;
     } catch (err) {
       await transactionalDataManager.rollbackTransaction();
       Logger.error(err);

@@ -20,13 +20,14 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import ResponseDescriptions from 'constants/ResponseDescriptions';
+import AttachMediaRequestDto from 'dto/AttachMediaRequestDto';
+import AttachMediaResponseDto from 'dto/AttachMediaResponseDto';
 import GetTextResponseDto from 'dto/GetTextResponseDto';
 import InsertTextRequestDto from 'dto/InsertTextRequestDto';
 import InsertTextResponseDto from 'dto/InsertTextResponseDto';
 import MediaAttachmentDto from 'dto/MediaAttachmentDto';
 import TextService from 'service/TextService';
 import BaseController from './BaseController';
-import AttachMediaRequestDto from 'dto/AttachMediaRequestDto';
 
 @ApiTags('Text')
 @Controller('texts')
@@ -85,7 +86,7 @@ export default class TextController extends BaseController {
   async attachMedia(
     @UploadedFile() media: Express.Multer.File,
     @Param('textId') textId: string,
-  ): Promise<string> {
+  ): Promise<AttachMediaResponseDto> {
     const dto = new AttachMediaRequestDto(textId, media);
     return this.textService.attachMedia(dto);
   }
