@@ -22,6 +22,7 @@ import {
 import ResponseDescriptions from 'constants/ResponseDescriptions';
 import AttachMediaRequestDto from 'dto/AttachMediaRequestDto';
 import AttachMediaResponseDto from 'dto/AttachMediaResponseDto';
+import GetAttachmentResponseDto from 'dto/GetAttachmentResponseDto';
 import GetTextResponseDto from 'dto/GetTextResponseDto';
 import InsertTextRequestDto from 'dto/InsertTextRequestDto';
 import InsertTextResponseDto from 'dto/InsertTextResponseDto';
@@ -89,5 +90,19 @@ export default class TextController extends BaseController {
   ): Promise<AttachMediaResponseDto> {
     const dto = new AttachMediaRequestDto(textId, media);
     return this.textService.attachMedia(dto);
+  }
+
+  @Get(':textId/attachments')
+  @ApiOkResponse({ description: ResponseDescriptions.OK })
+  @ApiNoContentResponse({ description: ResponseDescriptions.NO_CONTENT })
+  @ApiInternalServerErrorResponse({
+    description: ResponseDescriptions.INTERNAL_SERVER_ERROR,
+  })
+  async getTextAttachments(
+    @Param('textId') textId: string,
+  ): Promise<GetAttachmentResponseDto[]> {
+    const response = this.textService.getTextAttachments(textId);
+    this.validateGetResponse(response);
+    return response;
   }
 }

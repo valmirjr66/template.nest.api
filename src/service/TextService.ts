@@ -7,6 +7,7 @@ import {
 import BlobManager from 'blob/BlobManager';
 import AttachMediaRequestDto from 'dto/AttachMediaRequestDto';
 import AttachMediaResponseDto from 'dto/AttachMediaResponseDto';
+import GetAttachmentResponseDto from 'dto/GetAttachmentResponseDto';
 import GetTextResponseDto from 'dto/GetTextResponseDto';
 import InsertTextRequestDto from 'dto/InsertTextRequestDto';
 import InsertTextResponseDto from 'dto/InsertTextResponseDto';
@@ -83,5 +84,13 @@ export default class TextService {
       Logger.error(err);
       throw new InternalServerErrorException();
     }
+  }
+
+  async getTextAttachments(
+    textId: string,
+  ): Promise<GetAttachmentResponseDto[]> {
+    return this.dataManagerFactory
+      .getSimple()
+      .attachmentRepository.findByTextId(textId);
   }
 }
