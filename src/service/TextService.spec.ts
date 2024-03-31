@@ -58,6 +58,9 @@ describe('Text Service', () => {
     mockedTextRepo.prototype.findById.mockResolvedValue(SAMPLE_TEXT_MODEL);
     mockedTextRepo.prototype.findAll.mockResolvedValue([SAMPLE_TEXT_MODEL]);
     mockedTextRepo.prototype.save.mockResolvedValue(SAMPLE_TEXT_MODEL);
+    mockedAttachmentRepo.prototype.findByTextId.mockResolvedValue([
+      SAMPLE_ATTACHMENT_MODEL,
+    ]);
     mockedAttachmentRepo.prototype.save.mockResolvedValue(
       SAMPLE_ATTACHMENT_MODEL,
     );
@@ -134,5 +137,17 @@ describe('Text Service', () => {
     );
 
     expect(result).toStrictEqual(SAMPLE_ATTACHMENT_MODEL);
+  });
+
+  it('Should return all related attachments', async () => {
+    const textId = SAMPLE_ATTACHMENT_MODEL.textId;
+
+    const result = await textService.getTextAttachments(textId);
+
+    expect(mockedAttachmentRepo.prototype.findByTextId).toHaveBeenCalledWith(
+      textId,
+    );
+
+    expect(result).toStrictEqual([SAMPLE_ATTACHMENT_MODEL]);
   });
 });
