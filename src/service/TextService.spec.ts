@@ -54,6 +54,7 @@ describe('Text Service', () => {
   };
 
   beforeAll(() => {
+    mockedTextRepo.prototype.countById.mockResolvedValue(1);
     mockedTextRepo.prototype.findById.mockResolvedValue(SAMPLE_TEXT_MODEL);
     mockedTextRepo.prototype.findAll.mockResolvedValue([SAMPLE_TEXT_MODEL]);
     mockedTextRepo.prototype.save.mockResolvedValue(SAMPLE_TEXT_MODEL);
@@ -86,20 +87,42 @@ describe('Text Service', () => {
     expect(result).toStrictEqual(SAMPLE_TEXT_MODEL);
   });
 
-  it('Should successfuly attach a new media file', async () => {
-    const randomTextId = uuidv4();
+  it('Should throw a bad request exception (text not found)', async () => {
+    mockedTextRepo.prototype.countById.mockResolvedValueOnce(0);
 
     const mockedMedia = <Express.Multer.File>{
       originalname: 'file.png',
-      buffer: Buffer.from('abc'),
+      buffer: Buffer.from('xyz'),
     };
+
+    const randomTextId = uuidv4();
+
+    try {
+      await textService.attachMedia({
+        textId: randomTextId,
+        media: mockedMedia,
+      });
+    } catch (error) {
+      const { name, message } = error;
+      expect(name).toBe('BadRequestException');
+      expect(message).toBe("Id doesn't match any text");
+    }
+  });
+
+  it('Should successfuly attach a new media file', async () => {
+    const mockedMedia = <Express.Multer.File>{
+      originalname: 'file.png',
+      buffer: Buffer.from('xyz'),
+    };
+
+    const randomTextId = uuidv4();
 
     const result = await textService.attachMedia({
       textId: randomTextId,
       media: mockedMedia,
     });
 
-    const attachment = new InsertAttachmentRequestModel(
+    const expectedAttachment = new InsertAttachmentRequestModel(
       expect.any(String),
       'png',
       expect.any(Date),
@@ -107,7 +130,7 @@ describe('Text Service', () => {
     );
 
     expect(mockedAttachmentRepo.prototype.save).toHaveBeenCalledWith(
-      attachment,
+      expectedAttachment,
     );
 
     expect(result).toStrictEqual(SAMPLE_ATTACHMENT_MODEL);
