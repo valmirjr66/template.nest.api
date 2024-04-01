@@ -14,12 +14,4 @@ export default class BlobManager {
       throw 'Error while writing file';
     }
   }
-
-  async read(path: string): Promise<Buffer> {
-    try {
-      return await fs.readFile(`${this.basePath}/${path}`);
-    } catch (err) {
-      throw 'Error while reading file';
-    }
-  }
 }
