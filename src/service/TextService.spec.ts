@@ -13,19 +13,17 @@ const mockedBlobManager = jest.mocked(BlobManager);
 jest.mock('../repository/TextRepository');
 jest.mock('../repository/AttachmentRepository');
 jest.mock('../blob/BlobManager');
-jest.mock('../repository/TransactionalDataManager', () => {
-  return {
-    default: jest.fn().mockImplementation(() => {
-      return {
-        beginTransaction: () => {},
-        commitTransaction: () => {},
-        rollbackTransaction: () => {},
-        textRepository: mockedTextRepo.prototype,
-        attachmentRepository: mockedAttachmentRepo.prototype,
-      };
-    }),
-  };
-});
+jest.mock('../repository/TransactionalDataManager', () => ({
+  default: jest.fn().mockImplementation(() => {
+    return {
+      beginTransaction: () => {},
+      commitTransaction: () => {},
+      rollbackTransaction: () => {},
+      textRepository: mockedTextRepo.prototype,
+      attachmentRepository: mockedAttachmentRepo.prototype,
+    };
+  }),
+}));
 
 describe('Text Service', () => {
   const textService = new TextService(
@@ -51,6 +49,14 @@ describe('Text Service', () => {
     publicationDate: new Date(),
     text: SAMPLE_TEXT_MODEL,
     textId: SAMPLE_TEXT_MODEL.id,
+  };
+
+  const SAMPLE_MEDIA_DTO = {
+    textId: uuidv4(),
+    media: <Express.Multer.File>{
+      originalname: 'file.png',
+      buffer: Buffer.from('xyz'),
+    },
   };
 
   beforeAll(() => {
@@ -93,18 +99,8 @@ describe('Text Service', () => {
   it('Should throw a bad request exception (text not found)', async () => {
     mockedTextRepo.prototype.countById.mockResolvedValueOnce(0);
 
-    const mockedMedia = <Express.Multer.File>{
-      originalname: 'file.png',
-      buffer: Buffer.from('xyz'),
-    };
-
-    const randomTextId = uuidv4();
-
     try {
-      await textService.attachMedia({
-        textId: randomTextId,
-        media: mockedMedia,
-      });
+      await textService.attachMedia(SAMPLE_MEDIA_DTO);
     } catch (error) {
       const { name, message } = error;
       expect(name).toBe('BadRequestException');
@@ -113,23 +109,13 @@ describe('Text Service', () => {
   });
 
   it('Should successfuly attach a new media file', async () => {
-    const mockedMedia = <Express.Multer.File>{
-      originalname: 'file.png',
-      buffer: Buffer.from('xyz'),
-    };
-
-    const randomTextId = uuidv4();
-
-    const result = await textService.attachMedia({
-      textId: randomTextId,
-      media: mockedMedia,
-    });
+    const result = await textService.attachMedia(SAMPLE_MEDIA_DTO);
 
     const expectedAttachment = new InsertAttachmentRequestModel(
       expect.any(String),
       'png',
       expect.any(Date),
-      randomTextId,
+      SAMPLE_MEDIA_DTO.textId,
     );
 
     expect(mockedAttachmentRepo.prototype.save).toHaveBeenCalledWith(
@@ -137,6 +123,18 @@ describe('Text Service', () => {
     );
 
     expect(result).toStrictEqual(SAMPLE_ATTACHMENT_MODEL);
+  });
+
+  it('File writing should fail, forcing the transaction to rollback', async () => {
+    mockedBlobManager.prototype.write.mockImplementationOnce(async () => {
+      throw 'Error';
+    });
+
+    try {
+      await textService.attachMedia(SAMPLE_MEDIA_DTO);
+    } catch (error) {
+      expect(error.name).toBe('InternalServerErrorException');
+    }
   });
 
   it('Should return all related attachments', async () => {
