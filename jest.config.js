@@ -18,6 +18,7 @@ module.exports = {
     '!**/repository/**/*.(t|j)s',
     '!**/constants/*.(t|j)s',
     '!**/model/*.(t|j)s',
+    '!**/entity/*.(t|j)s',
   ],
   coverageDirectory: '../coverage',
 };
