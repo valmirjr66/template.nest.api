@@ -14,6 +14,7 @@ module.exports = {
     '**/*.(t|j)s',
     '!app.module.ts',
     '!main.ts',
+    '!**/controller/*.(t|j)s',
     '!**/repository/**/*.(t|j)s',
     '!**/constants/*.(t|j)s',
     '!**/model/*.(t|j)s',
